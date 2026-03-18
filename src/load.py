@@ -9,7 +9,7 @@ License: MIT
 
 import logging
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Union
 
 import pandas as pd
 
