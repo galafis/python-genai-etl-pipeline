@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  etl-pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: genai-etl-pipeline
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-3.5-turbo}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - ENABLE_AI=${ENABLE_AI:-false}
+    volumes:
+      - ./data:/app/data
+      - ./output:/app/output
+    env_file:
+      - .env
+    restart: "no"
+    command: ["python", "main.py"]
+
+  etl-pipeline-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: genai-etl-pipeline-ai
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-3.5-turbo}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - ENABLE_AI=true
+    volumes:
+      - ./data:/app/data
+      - ./output:/app/output
+    env_file:
+      - .env
+    restart: "no"
+    command: ["python", "main.py", "--ai", "--ai-column", "name"]
